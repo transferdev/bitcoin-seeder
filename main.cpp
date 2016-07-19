@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <getopt.h>
+#include <unistd.h>
 
 #include "bitcoin.h"
 #include "db.h"
@@ -20,6 +21,7 @@ public:
   int nThreads;
   int nPort;
   int nDnsThreads;
+  int fDaemon;
   int fUseTestNet;
   int fWipeBan;
   int fWipeIgnore;
@@ -31,7 +33,7 @@ public:
   const char *ipv6_proxy;
   std::set<uint64_t> filter_whitelist;
 
-  CDnsSeedOpts() : nThreads(96), nDnsThreads(4), nPort(53), mbox(NULL), ns(NULL), host(NULL), tor(NULL), fUseTestNet(false), fWipeBan(false), fWipeIgnore(false), ipv4_proxy(NULL), ipv6_proxy(NULL) {}
+  CDnsSeedOpts() : nThreads(96), nDnsThreads(4), nPort(53), mbox(NULL), ns(NULL), host(NULL), tor(NULL), fDaemon(false), fUseTestNet(false), fWipeBan(false), fWipeIgnore(false), ipv4_proxy(NULL), ipv6_proxy(NULL) {}
 
   void ParseCommandLine(int argc, char **argv) {
     static const char *help = "Bitcoin-seeder\n"
@@ -45,6 +47,7 @@ public:
                               "-d <threads>    Number of DNS server threads (default 4)\n"
                               "-p <port>       UDP port to listen on (default 53)\n"
                               "-o <ip:port>    Tor proxy IP/Port\n"
+                              "--daemon        Run as a daemon\n"
                               "-i <ip:port>    IPV4 SOCKS5 proxy IP/Port\n"
                               "-k <ip:port>    IPV6 SOCKS5 proxy IP/Port\n"
                               "-w f1,f2,...    Allow these flag combinations as filters\n"
@@ -64,6 +67,7 @@ public:
         {"dnsthreads", required_argument, 0, 'd'},
         {"port", required_argument, 0, 'p'},
         {"onion", required_argument, 0, 'o'},
+        {"daemon", no_argument, &fDaemon, 1},
         {"proxyipv4", required_argument, 0, 'i'},
         {"proxyipv6", required_argument, 0, 'k'},
         {"filter", required_argument, 0, 'w'},
@@ -389,17 +393,27 @@ extern "C" void* ThreadStats(void*) {
   } while(1);
 }
 
-static const string mainnet_seeds[] = {"dnsseed.bluematt.me", "bitseed.xf2.org", "dnsseed.bitcoin.dashjr.org", "seed.bitcoin.sipa.be", ""};
-static const string testnet_seeds[] = {"testnet-seed.alexykot.me",
-                                       "testnet-seed.bitcoin.petertodd.org",
-                                       "testnet-seed.bluematt.me",
-                                       "testnet-seed.bitcoin.schildbach.de",
+static const string mainnet_seeds[] = {"127.0.0.1:17170",
+                                       "198.27.97.180:17170",
+                                       "198.27.97.180:9999",
+                                       "99.254.31.42:17170",
+                                       "198.50.243.90:17170",
+                                       ""};
+static const string testnet_seeds[] = {"127.0.0.1:17170",
+                                       "198.27.97.180:17170",
+                                       "198.27.97.180:9999",
+                                       "99.254.31.42:17170",
+                                       "198.50.243.90:17170",
                                        ""};
 static const string *seeds = mainnet_seeds;
 
 extern "C" void* ThreadSeeder(void*) {
   if (!fTestNet){
-    db.Add(CService("kjy2eqzk4zwi5zd3.onion", 8333), true);
+    db.Add(CService("127.0.0.1", 17170, true), true);
+    db.Add(CService("198.27.97.180", 17170, true), true);
+    db.Add(CService("198.27.97.180", 9999, true), true);
+    db.Add(CService("99.254.31.42", 17170, true), true);
+    db.Add(CService("198.50.243.90", 17170, true), true);
   }
   do {
     for (int i=0; seeds[i] != ""; i++) {
@@ -468,6 +482,12 @@ int main(int argc, char **argv) {
   if (fDNS && !opts.mbox) {
     fprintf(stderr, "No e-mail address set. Please use -m.\n");
     exit(1);
+  }
+  if (opts.fDaemon) {
+    if (daemon(1, 0) == -1) {
+      perror("daemon");
+      exit(1);
+    }
   }
   FILE *f = fopen("dnsseed.dat","r");
   if (f) {
