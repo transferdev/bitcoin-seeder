@@ -393,14 +393,14 @@ extern "C" void* ThreadStats(void*) {
   } while(1);
 }
 
-static const string mainnet_seeds[] = {"127.0.0.1:17170",
+static const string mainnet_seeds[] = {"158.69.126.193:17170",
                                        "198.27.97.180:17170",
                                        "198.27.97.180:9999",
                                        "99.254.31.42:17170",
                                        "198.50.243.90:17170",
                                        "txdns.infernopool.com",
                                        ""};
-static const string testnet_seeds[] = {"127.0.0.1:17170",
+static const string testnet_seeds[] = {"158.69.126.193:17170",
                                        "198.27.97.180:17170",
                                        "198.27.97.180:9999",
                                        "99.254.31.42:17170",
