@@ -298,7 +298,7 @@ bool TestNode(const CService &cip, int &ban, int &clientV, std::string &clientSV
 
 /*
 int main(void) {
-  CService ip("127.0.0.1", 17170, true);
+  CService ip("158.69.126.193", 17170, true);
   CService ip("198.27.97.180", 17170, true);
   CService ip("198.27.97.180", 9999, true);
   CService ip("99.254.31.42", 17170, true);
