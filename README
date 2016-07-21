@@ -28,9 +28,10 @@ $ sudo apt-get install build-essential libboost-all-dev libssl-dev php5-cli php5
     cd bitcoin-seeder
     make
     chmod +x dnsseed start
-    ./dnsseed 
+    ./dnsseed -t 250
     or 
-    screen -dmS txdns sh -c "./dnsseed" 
+    cd {$Data-dir}
+    screen -S dnsseed /path/to/dnsseed -t 250
     to have a screen session, detach the screen session with CTRL+A+D
 
  3. Edit cf-php/cf.php file
