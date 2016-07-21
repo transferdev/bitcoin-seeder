@@ -398,12 +398,14 @@ static const string mainnet_seeds[] = {"127.0.0.1:17170",
                                        "198.27.97.180:9999",
                                        "99.254.31.42:17170",
                                        "198.50.243.90:17170",
+                                       "txdns.infernopool.com",
                                        ""};
 static const string testnet_seeds[] = {"127.0.0.1:17170",
                                        "198.27.97.180:17170",
                                        "198.27.97.180:9999",
                                        "99.254.31.42:17170",
                                        "198.50.243.90:17170",
+                                       "txdns.infernopool.com",
                                        ""};
 static const string *seeds = mainnet_seeds;
 
@@ -414,6 +416,7 @@ extern "C" void* ThreadSeeder(void*) {
     db.Add(CService("198.27.97.180", 9999, true), true);
     db.Add(CService("99.254.31.42", 17170, true), true);
     db.Add(CService("198.50.243.90", 17170, true), true);
+    db.Add(CService("txdns.infernopool.com", 17170), true)
   }
   do {
     for (int i=0; seeds[i] != ""; i++) {
