@@ -17,46 +17,38 @@ Features:
 REQUIREMENTS
 ------------
 
-$ sudo apt-get install build-essential libboost-all-dev libssl-dev
+$ sudo apt-get install build-essential libboost-all-dev libssl-dev php5-cli php5-curl
 
-USAGE
------
+**Let's get started**
 
-Assuming you want to run a dns seed on dnsseed.example.com, you will
-need an authorative NS record in example.com's domain record, pointing
-to for example vps.example.com:
+ 1. Get your CF API Key (My Settings -> Account -> API Key -> View API Key)
+ 2. Download and start bitcoin-seeder
 
-$ dig -t NS dnsseed.example.com
+    git clone https://github.com/transfer-dev/bitcoin-seeder
+    cd bitcoin-seeder
+    make
+    chmod +x dnsseed start
+    ./dnsseed 
+    or 
+    screen -dmS txdns sh -c "./dnsseed" 
+    to have a screen session, detach the screen session with CTRL+A+D
 
-;; ANSWER SECTION
-dnsseed.example.com.   86400    IN      NS     vps.example.com.
+ 3. Edit cf-php/cf.php file
+    open cf.php in an editor of your choice
+    and fill in 
 
-On the system vps.example.com, you can now run dnsseed:
+    $domain ="domain.com";
+    $name = "txdns"; //subdomain e.g. name.domain.com 
+    $number_of_records = 10; //maximum n A records with $name... 
+    $user = "emailofcloudflareaccount"; //user name
+    $key = "yourapikey"; //key for cloudflare api found in account settings
+    $seed_dump = "/path/to/dnsseed.dump"; //absolute path to dnsseed.dump in the bitcoin-seeder root directory 
+    
+accordingly. (The number_of_records in the table displayed above is "10" and I think that's a good number.)
+4. Have a cronjob run cf-php regularly
 
-./dnsseed -h dnsseed.example.com -n vps.example.com
-
-If you want the DNS server to report SOA records, please provide an
-e-mail address (with the @ part replaced by .) using -m.
-
-COMPILING
----------
-Compiling will require boost and ssl.  On debian systems, these are provided
-by `libboost-dev` and `libssl-dev` respectively.
-
-$ make
-
-This will produce the `dnsseed` binary.
+    crontab -e
+    * * * * * php ~/bitcoin-seeder/cf-php/cf.php
 
 
-RUNNING AS NON-ROOT
--------------------
-
-Typically, you'll need root privileges to listen to port 53 (name service).
-
-One solution is using an iptables rule (Linux only) to redirect it to
-a non-privileged port:
-
-$ iptables -t nat -A PREROUTING -p udp --dport 53 -j REDIRECT --to-port 5353
-
-If properly configured, this will allow you to run dnsseed in userspace, using
-the -p 5353 option.
+That should be it. You now have your own TX DNS seed. 
