@@ -412,11 +412,39 @@ static const string *seeds = mainnet_seeds;
 extern "C" void* ThreadSeeder(void*) {
   if (!fTestNet){
     db.Add(CService("127.0.0.1", 17170, true), true);
+    db.Add(CService("158.69.126.193", 17170, true), true);
     db.Add(CService("198.27.97.180", 17170, true), true);
-    db.Add(CService("198.27.97.180", 9999, true), true);
-    db.Add(CService("99.254.31.42", 17170, true), true);
     db.Add(CService("198.50.243.90", 17170, true), true);
-    db.Add(CService("txdns.infernopool.com", 17170), true)
+    db.Add(CService("99.254.31.42", 17170, true), true);
+    db.Add(CService("84.200.4.67", 17170, true), true);
+
+    db.Add(CService("194.135.84.147", 17170, true), true);
+    db.Add(CService("84.251.16.173", 17170, true), true);
+    db.Add(CService("86.5.28.9", 17170, true), true);
+    db.Add(CService("213.108.119.84", 17170, true), true);
+    db.Add(CService("194.135.85.63", 17171, true), true);
+    db.Add(CService("109.235.69.115", 17170, true), true);
+    db.Add(CService("109.235.69.115", 17171, true), true);
+    db.Add(CService("109.235.69.115", 17172, true), true);
+    db.Add(CService("109.235.69.115", 17173, true), true);
+    db.Add(CService("95.24.213.201", 17170, true), true);
+    db.Add(CService("83.221.241.254", 17100, true), true);
+    db.Add(CService("83.221.241.254", 17101, true), true);
+    db.Add(CService("83.221.241.254", 17102, true), true);
+    db.Add(CService("83.221.241.254", 17103, true), true);
+    db.Add(CService("83.221.241.254", 17104, true), true);
+    db.Add(CService("83.221.241.254", 17105, true), true);
+    db.Add(CService("83.221.241.254", 17106, true), true);
+    db.Add(CService("83.221.241.254", 17107, true), true);
+    db.Add(CService("83.221.241.254", 17108, true), true);
+    db.Add(CService("83.221.241.254", 17109, true), true);
+    db.Add(CService("83.221.241.254", 17110, true), true);
+    db.Add(CService("83.221.241.254", 17111, true), true);
+    db.Add(CService("83.221.241.254", 17112, true), true);
+    db.Add(CService("83.221.241.254", 17113, true), true);
+    db.Add(CService("83.221.241.254", 17114, true), true);
+    db.Add(CService("83.221.241.254", 17115, true), true);
+    db.Add(CService("83.221.241.254", 17116, true), true);
   }
   do {
     for (int i=0; seeds[i] != ""; i++) {
